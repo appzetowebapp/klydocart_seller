@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import 'package:webview_master_app/config/app_config.dart';
 
@@ -14,6 +15,24 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
+  
+  final AudioPlayer audioPlayer = AudioPlayer()..setReleaseMode(ReleaseMode.loop);
+  
+  audioPlayer.setAudioContext(AudioContext(
+    android: AudioContextAndroid(
+      isSpeakerphoneOn: true,
+      stayAwake: true,
+      contentType: AndroidContentType.sonification,
+      usageType: AndroidUsageType.alarm,
+      audioFocus: AndroidAudioFocus.gainTransientExclusive,
+    ),
+    iOS: AudioContextIOS(
+      category: AVAudioSessionCategory.playback,
+      options: {
+        AVAudioSessionOptions.duckOthers,
+      },
+    ),
+  ));
 
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
@@ -24,14 +43,35 @@ void onStart(ServiceInstance service) async {
       service.setAsBackgroundService();
     });
 
-    // Set initial notification content once
     service.setForegroundNotificationInfo(
       title: "Klydocart Delivery Service Active",
       content: "Waiting for new orders...",
     );
   }
+  
+  service.on('playOrderRingtone').listen((event) async {
+    try {
+      if (audioPlayer.state == PlayerState.playing) {
+        return; // Prevent duplicate playback and echo
+      }
+      await audioPlayer.play(AssetSource('audio/iphone-remix-68028.mp3'));
+    } catch (e) {
+      debugPrint('⚠️ AudioPlayer play error: $e');
+    }
+  });
+  
+  service.on('stopOrderRingtone').listen((event) async {
+    try {
+      await audioPlayer.stop();
+    } catch (e) {
+      debugPrint('⚠️ AudioPlayer stop error: $e');
+    }
+  });
 
   service.on('stopService').listen((event) async {
+    try {
+      await audioPlayer.stop();
+    } catch (_) {}
     service.stopSelf();
   });
 
@@ -51,7 +91,6 @@ void onStart(ServiceInstance service) async {
           '📍 Background Location: ${position.latitude}, ${position.longitude}',
         );
 
-        // Broadcast location update
         service.invoke('update', {
           "latitude": position.latitude,
           "longitude": position.longitude,

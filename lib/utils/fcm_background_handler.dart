@@ -66,10 +66,12 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       // Cancel that auto-notification so only the critical-channel version appears.
       if (message.notification != null) {
         debugPrint(
-            'ℹ️ [BG] FCM notification payload present — cancelling auto-shown notification before showing critical alert.');
+            'ℹ️ [BG] FCM notification payload present. Cancelling the silent dummy notification.');
         // Wait a short delay to ensure the Android OS has fully rendered the auto-displayed notification before we cancel it
         await Future.delayed(const Duration(milliseconds: 600));
         await serviceInstance.cancelAllNotifications();
+        // Wait briefly for the OS to process the cancellation so we don't accidentally cancel our custom notification
+        await Future.delayed(const Duration(milliseconds: 400));
       }
 
       String notificationId =
@@ -103,15 +105,12 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       final autoBody = (message.notification!.body ?? '').trim();
 
       if (autoTitle.isEmpty && autoBody.isEmpty) {
-        // The FCM payload carried an empty notification object. Android OS
-        // auto-showed a blank notification before this handler ran. Cancel it.
-        final svc = NotificationService();
-        await svc.initialize(isBackground: true);
-        // Wait a short delay to ensure the Android OS has fully rendered the auto-displayed notification before we cancel it
-        await Future.delayed(const Duration(milliseconds: 600));
-        await svc.cancelAllNotifications();
+        // The FCM payload carried an empty notification object. 
+        // We previously called cancelAllNotifications() here, but it deletes 
+        // the critical order notification if it arrives at the same time.
+        // Skipping cancellation to prevent notification UI bugs.
         debugPrint(
-            'ℹ️ [BG] Cancelled blank auto-FCM notification (empty title+body).');
+            'ℹ️ [BG] Blank auto-FCM notification (empty title+body) detected. Skipping cancellation to protect active order alarms.');
       } else {
         debugPrint(
             'ℹ️ [BG] Non-blank FCM notification payload — Android OS already displayed it silently. Skipping duplicate manual show.');

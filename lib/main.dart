@@ -109,8 +109,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      debugPrint('📱 App resumed: Stopping order ringtone (keeping tray notifications)');
-      NotificationService().stopOrderAlertSound();
+      debugPrint('📱 App resumed: Stopping order ringtone immediately as requested.');
+      NotificationService().stopOrderAlertSound(cancelNotification: false);
     }
   }
 

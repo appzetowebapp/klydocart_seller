@@ -71,8 +71,7 @@ class AppConfig {
     return 'user';
   }
 
-  /// Drawable name (res/drawable) — must be white silhouette, not mipmap launcher.
-  static const String notificationIcon = '@mipmap/ic_launcher';
+  static const String notificationIcon = 'ic_stat_notification';
 
   // Notification color (used for Android notification LED and accent color)
   static const Color notificationColor =
@@ -89,7 +88,7 @@ class AppConfig {
       'Notifications from the website and push notifications';
 
   // Critical Notification channel ID (Android)
-  static const String criticalChannelId = 'critical_order_alerts_v7';
+  static const String criticalChannelId = 'critical_order_alerts_v11_silent';
 
   // Critical Notification channel name (Android)
   static const String criticalChannelName = 'New Order Alerts';
@@ -99,7 +98,7 @@ class AppConfig {
       'Urgent notifications for new restaurant orders';
 
   // Custom notification sound filename (without extension for Android)
-  static const String notificationSoundName = 'order_ringtone';
+  static const String notificationSoundName = 'iphone_remix_68028';
 
   // Silent channel for non-order notifications (status updates, etc.)
   static const String silentChannelId = 'silent_notifications_v1';

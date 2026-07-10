@@ -33,6 +33,7 @@ class NotificationService {
   // Track shown notifications to prevent duplicates
   final Set<String> _shownNotificationIds = <String>{};
   final Map<String, DateTime> _notificationTimestamps = <String, DateTime>{};
+  static Timer? _dismissCheckTimer;
 
   // Stream for notification taps
   final _tapController = StreamController<Map<String, dynamic>>.broadcast();
@@ -47,15 +48,14 @@ class NotificationService {
 
   /// Strict evaluation logic to check for explicit new order criteria only
   static bool isNewOrderNotification(Map<String, dynamic> data) {
-    final type =
-        (data['type'] ??
-                data['notification_type'] ??
-                data['click_action'] ??
-                data['event'] ??
-                '')
-            .toString()
-            .toLowerCase()
-            .trim();
+    final type = (data['type'] ??
+            data['notification_type'] ??
+            data['click_action'] ??
+            data['event'] ??
+            '')
+        .toString()
+        .toLowerCase()
+        .trim();
 
     final title = (data['title'] ?? '').toString().toLowerCase().trim();
     final body = (data['body'] ?? '').toString().toLowerCase().trim();
@@ -102,10 +102,10 @@ class NotificationService {
 
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
-          requestAlertPermission: true,
-          requestBadgePermission: true,
-          requestSoundPermission: true,
-        );
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
 
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
@@ -118,10 +118,9 @@ class NotificationService {
     );
 
     if (Platform.isAndroid && !isBackground) {
-      final androidPlugin = _notificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+      final androidPlugin =
+          _notificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
       try {
         await androidPlugin?.requestNotificationsPermission();
       } catch (e) {
@@ -144,13 +143,13 @@ class NotificationService {
       _firebaseMessaging = FirebaseMessaging.instance;
 
       if (Platform.isIOS) {
-        NotificationSettings settings = await _firebaseMessaging!
-            .requestPermission(
-              alert: true,
-              badge: true,
-              sound: true,
-              provisional: false,
-            );
+        NotificationSettings settings =
+            await _firebaseMessaging!.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+          provisional: false,
+        );
         if (settings.authorizationStatus == AuthorizationStatus.authorized) {
           debugPrint('✅ Firebase notification permission granted (iOS)');
         }
@@ -230,8 +229,8 @@ class NotificationService {
     final String uniqueId = notificationId.isNotEmpty
         ? notificationId
         : '${data['type'] ?? ''}_${data['orderId'] ?? data['order_id'] ?? ''}_'
-              '${notification?.title ?? data['title'] ?? ''}_'
-              '${notification?.body ?? data['body'] ?? ''}';
+            '${notification?.title ?? data['title'] ?? ''}_'
+            '${notification?.body ?? data['body'] ?? ''}';
 
     _cleanOldNotificationIds();
 
@@ -240,8 +239,7 @@ class NotificationService {
     if (isNewOrderNotification(data)) {
       final orderTitle =
           notification?.title ?? data['title']?.toString() ?? 'New Order';
-      final orderBody =
-          notification?.body ??
+      final orderBody = notification?.body ??
           data['body']?.toString() ??
           'You have a new delivery order';
 
@@ -328,58 +326,47 @@ class NotificationService {
     try {
       const AndroidNotificationChannel standardChannel =
           AndroidNotificationChannel(
-            AppConfig.notificationChannelId,
-            AppConfig.notificationChannelName,
-            description: AppConfig.notificationChannelDescription,
-            importance: Importance.low,
-            playSound: false,
-            enableVibration: false,
-            showBadge: true,
-          );
+        AppConfig.notificationChannelId,
+        AppConfig.notificationChannelName,
+        description: AppConfig.notificationChannelDescription,
+        importance: Importance.low,
+        playSound: false,
+        enableVibration: false,
+        showBadge: true,
+      );
 
       const AndroidNotificationChannel silentChannel =
           AndroidNotificationChannel(
-            AppConfig.silentChannelId,
-            AppConfig.silentChannelName,
-            description: AppConfig.silentChannelDescription,
-            importance: Importance.low,
-            playSound: false,
-            enableVibration: false,
-            showBadge: true,
-          );
+        AppConfig.silentChannelId,
+        AppConfig.silentChannelName,
+        description: AppConfig.silentChannelDescription,
+        importance: Importance.low,
+        playSound: false,
+        enableVibration: false,
+        showBadge: true,
+      );
 
       const AndroidNotificationChannel criticalChannel =
           AndroidNotificationChannel(
-            AppConfig.criticalChannelId,
-            AppConfig.criticalChannelName,
-            description: AppConfig.criticalChannelDescription,
-            importance: Importance.max,
-            playSound: true,
-            sound: const RawResourceAndroidNotificationSound(
-              AppConfig.notificationSoundName,
-            ),
-            enableVibration: true,
-            showBadge: true,
-            enableLights: true,
-            ledColor: Colors.red,
-          );
+        AppConfig.criticalChannelId,
+        AppConfig.criticalChannelName,
+        description: AppConfig.criticalChannelDescription,
+        importance: Importance.max,
+        playSound: true,
+        sound: const RawResourceAndroidNotificationSound(
+          AppConfig.notificationSoundName,
+        ),
+        enableVibration: true,
+        showBadge: true,
+        enableLights: true,
+        ledColor: Colors.red,
+      );
 
-      final androidImplementation = _notificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+      final androidImplementation =
+          _notificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
 
       if (androidImplementation != null) {
-        await androidImplementation.deleteNotificationChannel(
-          AppConfig.notificationChannelId,
-        );
-        await androidImplementation.deleteNotificationChannel(
-          AppConfig.silentChannelId,
-        );
-        await androidImplementation.deleteNotificationChannel(
-          AppConfig.criticalChannelId,
-        );
-
         await androidImplementation.createNotificationChannel(standardChannel);
         await androidImplementation.createNotificationChannel(silentChannel);
         await androidImplementation.createNotificationChannel(criticalChannel);
@@ -431,23 +418,23 @@ class NotificationService {
   }) async {
     final int localNotificationId =
         notificationId != null && notificationId.isNotEmpty
-        ? notificationId.hashCode.abs() % 2147483647
-        : '${title}_$body'.hashCode.abs() % 2147483647;
+            ? notificationId.hashCode.abs() % 2147483647
+            : '${title}_$body'.hashCode.abs() % 2147483647;
 
     final AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-          AppConfig.silentChannelId,
-          AppConfig.silentChannelName,
-          channelDescription: AppConfig.silentChannelDescription,
-          importance: Importance.low,
-          priority: Priority.low,
-          playSound: false,
-          enableVibration: false,
-          icon: AppConfig.notificationIcon,
-          showWhen: true,
-          styleInformation: const BigTextStyleInformation(''),
-          color: AppConfig.notificationColor,
-        );
+      AppConfig.silentChannelId,
+      AppConfig.silentChannelName,
+      channelDescription: AppConfig.silentChannelDescription,
+      importance: Importance.low,
+      priority: Priority.low,
+      playSound: false,
+      enableVibration: false,
+      icon: AppConfig.notificationIcon,
+      showWhen: true,
+      styleInformation: const BigTextStyleInformation(''),
+      color: AppConfig.notificationColor,
+    );
 
     await _notificationsPlugin.show(
       localNotificationId,
@@ -475,11 +462,14 @@ class NotificationService {
     final data = orderData ?? {};
     final localId = NewOrderNotificationUtil.notificationIdFor(data);
 
-    final android = _notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _notificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     await NewOrderNotificationUtil.ensureCriticalChannel(android);
+
+    final service = FlutterBackgroundService();
+    if (await service.isRunning()) {
+      service.invoke('playOrderRingtone');
+    }
 
     await _notificationsPlugin.show(
       localId,
@@ -488,11 +478,43 @@ class NotificationService {
       NewOrderNotificationUtil.buildDetails(),
       payload: payload,
     );
+
+    // Stop previous timer if any
+    _dismissCheckTimer?.cancel();
+    int missingCount = 0;
+    _dismissCheckTimer =
+        Timer.periodic(const Duration(seconds: 2), (timer) async {
+      if (Platform.isAndroid) {
+        final activeNotifications = await android?.getActiveNotifications();
+        if (activeNotifications != null) {
+          final exists = activeNotifications.any((n) => n.id == localId);
+          if (!exists) {
+            missingCount++;
+            if (missingCount >= 3) {
+              debugPrint(
+                  '🛑 Custom notification swiped away! Stopping ringtone.');
+              timer.cancel();
+              stopOrderAlertSound();
+            }
+          } else {
+            // Reset counter if notification is found again
+            missingCount = 0;
+          }
+        }
+      }
+    });
   }
 
-  Future<void> stopOrderAlertSound() async {
+  Future<void> stopOrderAlertSound({bool cancelNotification = true}) async {
     try {
-      await cancelAllNotifications();
+      _dismissCheckTimer?.cancel();
+      final service = FlutterBackgroundService();
+      if (await service.isRunning()) {
+        service.invoke('stopOrderRingtone');
+      }
+      if (cancelNotification) {
+        await cancelAllNotifications();
+      }
     } catch (_) {}
   }
 
