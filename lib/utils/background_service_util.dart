@@ -15,24 +15,25 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
-  
-  final AudioPlayer audioPlayer = AudioPlayer()..setReleaseMode(ReleaseMode.loop);
-  
-  audioPlayer.setAudioContext(AudioContext(
-    android: AudioContextAndroid(
-      isSpeakerphoneOn: true,
-      stayAwake: true,
-      contentType: AndroidContentType.sonification,
-      usageType: AndroidUsageType.alarm,
-      audioFocus: AndroidAudioFocus.gainTransientExclusive,
+
+  final AudioPlayer audioPlayer = AudioPlayer()
+    ..setReleaseMode(ReleaseMode.loop);
+
+  audioPlayer.setAudioContext(
+    AudioContext(
+      android: AudioContextAndroid(
+        isSpeakerphoneOn: true,
+        stayAwake: true,
+        contentType: AndroidContentType.sonification,
+        usageType: AndroidUsageType.alarm,
+        audioFocus: AndroidAudioFocus.gainTransientExclusive,
+      ),
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.playback,
+        options: {AVAudioSessionOptions.duckOthers},
+      ),
     ),
-    iOS: AudioContextIOS(
-      category: AVAudioSessionCategory.playback,
-      options: {
-        AVAudioSessionOptions.duckOthers,
-      },
-    ),
-  ));
+  );
 
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
@@ -44,11 +45,11 @@ void onStart(ServiceInstance service) async {
     });
 
     service.setForegroundNotificationInfo(
-      title: "Klydocart Delivery Service Active",
+      title: "Klydocart Seller Service Active",
       content: "Waiting for new orders...",
     );
   }
-  
+
   service.on('playOrderRingtone').listen((event) async {
     try {
       if (audioPlayer.state == PlayerState.playing) {
@@ -59,7 +60,7 @@ void onStart(ServiceInstance service) async {
       debugPrint('⚠️ AudioPlayer play error: $e');
     }
   });
-  
+
   service.on('stopOrderRingtone').listen((event) async {
     try {
       await audioPlayer.stop();

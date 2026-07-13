@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 /// All settings are documented inline for easy customization.
 class AppConfig {
   // ==================== APP IDENTITY ====================
-  static const String appName = 'Klydocart Delivery';
+  static const String appName = 'Klydocart Seller';
   static const String appLogoPath = 'assets/images/logo.png';
 
   // ==================== COLORS & THEME ====================
@@ -57,7 +57,7 @@ class AppConfig {
 
   // ==================== WEB URL CONFIGURATION ====================
   // ⚠️ CHANGE THIS URL TO YOUR WEB APPLICATION ⚠️
-  static const String webUrl = 'https://klydocart.com/delivery/login';
+  static const String webUrl = 'https://klydocart.com/seller';
 
   /// Role sent with FCM token registration so the backend can target this device.
   static String get appRole {

@@ -1918,7 +1918,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen>
     with WidgetsBindingObserver {
-  static const platform = MethodChannel('com.klydocart.delivery/geolocation');
+  static const platform = MethodChannel('com.klydokart.seller/geolocation');
   InAppWebViewController? _webViewController;
   bool _isLoading = true;
   double _loadingProgress = 0.0;
@@ -2551,7 +2551,7 @@ class _WebViewScreenState extends State<WebViewScreen>
             var isLogin = urlString.includes('/auth/login') || 
                           urlString.includes('/users/login') ||
                           urlString.includes('/auth/signup-verify') ||
-                          urlString.includes('/auth/delivery/verify-sms-otp');
+                          urlString.includes('v1/auth/seller/verify-otp');
             
             // Call original fetch
             try {
@@ -2594,7 +2594,7 @@ class _WebViewScreenState extends State<WebViewScreen>
             if (url && (url.includes('/auth/login') || 
                         url.includes('/users/login') ||
                         url.includes('/auth/signup-verify') ||
-                        url.includes('/auth/delivery/verify-sms-otp'))) {
+                        url.includes('v1/auth/seller/verify-otp'))) {
                this.addEventListener('load', function() {
                   try {
                     var responseBody = self.responseText;

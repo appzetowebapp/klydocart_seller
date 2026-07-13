@@ -84,15 +84,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         orderData: data,
       );
 
-      try {
-        final service = FlutterBackgroundService();
-        if (!(await service.isRunning())) {
-          await service.startService();
-        }
-      } catch (e) {
-        debugPrint(
-            '❌ [BG] Error starting background service: $e');
-      }
+      // The background service and ringtone invocation are now fully handled
+      // inside showOrderNotification() which awaits readiness to avoid races.
       return;
     }
 

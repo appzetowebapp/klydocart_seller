@@ -38,10 +38,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-    <!-- Required for audio playback in foreground service (Android 14+) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-
-
+   
     <!-- ==================== OTHER USEFUL PERMISSIONS ==================== -->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -51,7 +48,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     
     <application
-        android:label="Klydocart Delivery"
+        android:label="Klydocart Seller"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"

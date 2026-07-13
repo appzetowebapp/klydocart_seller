@@ -530,7 +530,7 @@ class DownloadService {
     if (!Platform.isAndroid) return;
 
     try {
-      const platform = MethodChannel('com.klydocart.delivery/downloads');
+      const platform = MethodChannel('com.klydokart.seller/downloads');
       final result = await platform.invokeMethod('addToDownloads', {
         'filePath': filePath,
         'fileName': filename,
