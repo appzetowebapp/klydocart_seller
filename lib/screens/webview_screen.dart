@@ -1918,7 +1918,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen>
     with WidgetsBindingObserver {
-  static const platform = MethodChannel('com.klydokart.seller/geolocation');
+  static const platform = MethodChannel('com.klydokart.selle/geolocation');
   InAppWebViewController? _webViewController;
   bool _isLoading = true;
   double _loadingProgress = 0.0;

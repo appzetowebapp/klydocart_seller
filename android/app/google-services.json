@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:246207647923:android:75d256a25a3d12679560c6",
         "android_client_info": {
-          "package_name": "com.klydokart.seller"
+          "package_name": "com.klydokart.selle"
         }
       },
       "oauth_client": [],
@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:246207647923:android:19495c249a7d0a789560c6",
         "android_client_info": {
-          "package_name": "com.klydokart.seller"
+          "package_name": "com.klydokart.selle"
         }
       },
       "oauth_client": [],
