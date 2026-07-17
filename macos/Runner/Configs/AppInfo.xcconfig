@@ -8,7 +8,7 @@
 PRODUCT_NAME = Hetnaz
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.hetnaz.app
+PRODUCT_BUNDLE_IDENTIFIER = com.klydocart.seller
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.webview_master_app. All rights reserved.

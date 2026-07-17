@@ -1918,7 +1918,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen>
     with WidgetsBindingObserver {
-  static const platform = MethodChannel('com.klydokart.selle/geolocation');
+  static const platform = MethodChannel('com.klydocart.seller/geolocation');
   InAppWebViewController? _webViewController;
   bool _isLoading = true;
   double _loadingProgress = 0.0;
@@ -2093,8 +2093,7 @@ class _WebViewScreenState extends State<WebViewScreen>
     String? phone;
 
     void fromEntity(Map entity) {
-      phone ??=
-          entity['phone']?.toString() ??
+      phone ??= entity['phone']?.toString() ??
           entity['phoneNumber']?.toString() ??
           entity['mobile']?.toString();
     }
@@ -2189,8 +2188,7 @@ class _WebViewScreenState extends State<WebViewScreen>
       );
 
       // Execute JavaScript to extract blob
-      final blobDataScript =
-          '''
+      final blobDataScript = '''
         (function() {
           try {
             var handlerName = '$handlerName';
@@ -2325,9 +2323,8 @@ class _WebViewScreenState extends State<WebViewScreen>
     final downloadService = DownloadService();
     try {
       // Extract base64 data (remove data URL prefix)
-      final base64Content = base64Data.contains(',')
-          ? base64Data.split(',')[1]
-          : base64Data;
+      final base64Content =
+          base64Data.contains(',') ? base64Data.split(',')[1] : base64Data;
 
       final blobMimeType = mimeType ?? 'application/pdf';
 
@@ -2692,8 +2689,7 @@ class _WebViewScreenState extends State<WebViewScreen>
       if (token != null && token.isNotEmpty) {
         debugPrint('🔑 Syncing access token to web localStorage...');
         // Try common local storage keys used by many SPAs
-        final script =
-            """
+        final script = """
           (function() {
             try {
               var token = "${token.replaceAll('"', '\\"').replaceAll('\n', '')}";
@@ -2974,9 +2970,8 @@ class _WebViewScreenState extends State<WebViewScreen>
                 if (upiParamsResult != null &&
                     upiParamsResult.toString() != 'null') {
                   try {
-                    final paramsJson =
-                        jsonDecode(upiParamsResult.toString())
-                            as Map<String, dynamic>;
+                    final paramsJson = jsonDecode(upiParamsResult.toString())
+                        as Map<String, dynamic>;
                     if (paramsJson.isNotEmpty) {
                       final upiUri = Uri(
                         scheme: 'upi',
@@ -3178,8 +3173,7 @@ class _WebViewScreenState extends State<WebViewScreen>
                       pullToRefreshController: _pullToRefreshController,
                       initialUserScripts: UnmodifiableListView<UserScript>([
                         UserScript(
-                          source:
-                              """
+                          source: """
                             (function() {
                               // Nuclear Polyfill for Firebase Compatibility
                               
@@ -3465,7 +3459,8 @@ class _WebViewScreenState extends State<WebViewScreen>
                           '✅ WebView created & file chooser registered',
                         );
                       },
-                      shouldOverrideUrlLoading: (controller, navigationAction) async {
+                      shouldOverrideUrlLoading:
+                          (controller, navigationAction) async {
                         final urlRequest = navigationAction.request;
                         final uri = urlRequest.url;
 
@@ -3557,8 +3552,8 @@ class _WebViewScreenState extends State<WebViewScreen>
                             if (args.isNotEmpty && args[0] is Map) {
                               final Map<dynamic, dynamic> data = args[0];
                               final String? url = data['url']?.toString();
-                              final String? base64Data = data['data']
-                                  ?.toString();
+                              final String? base64Data =
+                                  data['data']?.toString();
                               if (url != null && base64Data != null) {
                                 debugPrint('📦 Captured blob creation: $url');
                                 _capturedBlobs[url] = {
@@ -3809,12 +3804,12 @@ class _WebViewScreenState extends State<WebViewScreen>
                       },
                       onGeolocationPermissionsShowPrompt:
                           (controller, origin) async {
-                            return GeolocationPermissionShowPromptResponse(
-                              origin: origin,
-                              allow: true,
-                              retain: true,
-                            );
-                          },
+                        return GeolocationPermissionShowPromptResponse(
+                          origin: origin,
+                          allow: true,
+                          retain: true,
+                        );
+                      },
                       onPermissionRequest: (controller, request) async {
                         debugPrint(
                           '🔒 Permission requested: ${request.resources}',
@@ -3853,7 +3848,8 @@ class _WebViewScreenState extends State<WebViewScreen>
                           '🌐 JS Console: ${consoleMessage.messageLevel}: ${consoleMessage.message}',
                         );
                       },
-                      onDownloadStartRequest: (controller, downloadStartRequest) async {
+                      onDownloadStartRequest:
+                          (controller, downloadStartRequest) async {
                         try {
                           final url = downloadStartRequest.url.toString();
                           final suggestedFilename =
@@ -3888,17 +3884,16 @@ class _WebViewScreenState extends State<WebViewScreen>
                           }
 
                           // Check if it's a receipt download
-                          final isReceiptDownload =
-                              url.contains('receipt') ||
+                          final isReceiptDownload = url.contains('receipt') ||
                               url.contains('download-receipt') ||
                               url.contains('invoice') ||
                               (suggestedFilename != null &&
                                   (suggestedFilename.toLowerCase().contains(
-                                        'receipt',
-                                      ) ||
+                                            'receipt',
+                                          ) ||
                                       suggestedFilename.toLowerCase().contains(
-                                        'invoice',
-                                      )));
+                                            'invoice',
+                                          )));
 
                           if (!mounted) return;
 
@@ -3910,11 +3905,11 @@ class _WebViewScreenState extends State<WebViewScreen>
 
                           if (isReceiptDownload) {
                             // For receipts, try to get permission for public Downloads
-                            hasPermission =
-                                await PermissionHandlerUtil.checkStoragePermission();
+                            hasPermission = await PermissionHandlerUtil
+                                .checkStoragePermission();
                             if (!hasPermission) {
-                              final granted =
-                                  await PermissionHandlerUtil.requestStoragePermission();
+                              final granted = await PermissionHandlerUtil
+                                  .requestStoragePermission();
                               if (!granted) {
                                 // Permission denied, but we can still download to app-specific folder
                                 debugPrint(
@@ -3962,8 +3957,8 @@ class _WebViewScreenState extends State<WebViewScreen>
                                         strokeWidth: 2,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                              Colors.white,
-                                            ),
+                                          Colors.white,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 12),
@@ -4123,7 +4118,8 @@ class _WebViewScreenState extends State<WebViewScreen>
 
                             // Show Notification
                             try {
-                              await NotificationService().showSimpleNotification(
+                              await NotificationService()
+                                  .showSimpleNotification(
                                 title: 'Download Complete',
                                 body:
                                     'File saved: ${result.filename ?? "File"}',
@@ -4171,8 +4167,7 @@ class _WebViewScreenState extends State<WebViewScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CircularProgressIndicator(
-                                value:
-                                    _loadingProgress < 1.0 &&
+                                value: _loadingProgress < 1.0 &&
                                         _loadingProgress > 0
                                     ? _loadingProgress
                                     : null,
@@ -5056,21 +5051,19 @@ class _WebViewScreenState extends State<WebViewScreen>
   Future<void> _openOrderModalInWebView(Map<String, dynamic> data) async {
     if (_webViewController == null || !mounted) return;
 
-    final orderId =
-        (data['orderId'] ??
-                data['order_id'] ??
-                data['orderMongoId'] ??
-                data['id'] ??
-                '')
-            .toString();
+    final orderId = (data['orderId'] ??
+            data['order_id'] ??
+            data['orderMongoId'] ??
+            data['id'] ??
+            '')
+        .toString();
 
     // Build a JS-safe JSON literal from the FCM data map.
     final safeJson = jsonEncode(
       data,
     ).replaceAll(r'\', r'\\').replaceAll("'", r"\'");
 
-    final script =
-        """
+    final script = """
 (function() {
   try {
     var orderData = JSON.parse('$safeJson');

@@ -358,8 +358,7 @@ class DownloadService {
 
         // Extract Content-Disposition from response headers
         final headers = headResponse.headers;
-        finalContentDisposition =
-            headers.value('content-disposition') ??
+        finalContentDisposition = headers.value('content-disposition') ??
             headers.value('Content-Disposition');
 
         debugPrint('📋 Content-Disposition: $finalContentDisposition');
@@ -530,7 +529,7 @@ class DownloadService {
     if (!Platform.isAndroid) return;
 
     try {
-      const platform = MethodChannel('com.klydokart.selle/downloads');
+      const platform = MethodChannel('com.klydocart.seller/downloads');
       final result = await platform.invokeMethod('addToDownloads', {
         'filePath': filePath,
         'fileName': filename,

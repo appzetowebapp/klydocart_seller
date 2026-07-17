@@ -9,7 +9,26 @@
       "client_info": {
         "mobilesdk_app_id": "1:246207647923:android:75d256a25a3d12679560c6",
         "android_client_info": {
-          "package_name": "com.klydokart.selle"
+          "package_name": "com.klydocart.delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBDcLFDbNfGBNBfEafK611men7pDw6oUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246207647923:android:5da1574385ce3b0d9560c6",
+        "android_client_info": {
+          "package_name": "com.klydocart.seller"
         }
       },
       "oauth_client": [],
@@ -47,7 +66,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:246207647923:android:19495c249a7d0a789560c6",
         "android_client_info": {
-          "package_name": "com.klydokart.selle"
+          "package_name": "com.klydokart.seller"
         }
       },
       "oauth_client": [],
