@@ -143,11 +143,11 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         children: [
           // 1. Deep Navy Gradient Background
-         Container(
-  decoration: const BoxDecoration(
-    color: Color(0xFFF7F7F7),
-  ),
-),
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+          ),
           // 2. Animated Floating Soft Glows
           AnimatedBuilder(
             animation: _backgroundController,
