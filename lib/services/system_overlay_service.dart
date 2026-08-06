@@ -4,7 +4,7 @@
 // /// Service to manage system-level overlay that works over other apps
 // class SystemOverlayService {
 //   static const MethodChannel _channel =
-//       MethodChannel('com.klydocart.seller/overlay');
+//       MethodChannel('com.klydocart.seller1/overlay');
 
 //   /// Check if overlay permission is granted
 //   static Future<bool> checkOverlayPermission() async {

@@ -28,7 +28,7 @@ class NotificationService {
 
   bool _isInitialized = false;
   bool _listenersRegistered = false;
-  static const _platform = MethodChannel('com.klydocart.seller/geolocation');
+  static const _platform = MethodChannel('com.klydocart.seller1/geolocation');
 
   // Track shown notifications to prevent duplicates
   final Set<String> _shownNotificationIds = <String>{};
